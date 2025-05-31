@@ -1,0 +1,52 @@
+<!-- user_edit.html - шаблон для редактирования пользователя -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Редактировать пользователя</h2>
+<form method="post" class="user-edit-form" style="margin-bottom:0;">
+    {{ form.hidden_tag() }}
+    <div>{{ form.last_name.label }}<br>{{ form.last_name(size=32) }}</div>
+    <div>{{ form.first_name.label }}<br>{{ form.first_name(size=32) }}</div>
+    <div>{{ form.middle_name.label }}<br>{{ form.middle_name(size=32) }}</div>
+    <div>{{ form.role_id.label }}<br>{{ form.role_id() }}</div>
+    <div>{{ form.password.label }}<br>{{ form.password(size=32, autocomplete="new-password") }}</div>
+    <div class="form-actions">
+        {# Кнопка "Назад" #}
+        <a href="{{ url_for('users') }}" class="btn btn-small form-back-btn" style="background:#888; display: flex; align-items: center; justify-content: center; min-height: 36px;">Назад</a>
+        {# Кнопка "Сохранить" #}
+        {{ form.submit(class_="btn") }}
+    </div>
+</form>
+<style>
+.user-edit-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 24px;
+    gap: 12px;
+}
+.user-edit-form .btn, .user-edit-form .btn-small, .user-edit-form .form-back-btn {
+    min-width: 140px;
+    font-size: 16px;
+    padding: 8px 24px;
+    text-align: center;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 36px;
+}
+@media (max-width: 900px) {
+    .user-edit-form .form-actions {
+        flex-direction: column-reverse;
+        gap: 8px;
+        align-items: stretch;
+    }
+    .user-edit-form .btn, .user-edit-form .btn-small, .user-edit-form .form-back-btn {
+        width: 100%;
+        min-width: 0;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}

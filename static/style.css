@@ -1,0 +1,255 @@
+/* style.css - основной файл стилей для проекта */
+
+/* Основные стили для страницы */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f6fb;
+    color: #222;
+}
+
+/* Стили для верхнего меню (header) */
+nav {
+    background: #d32f2f; /* красный */
+    color: #fff;
+    padding: 22px 0 22px 30px; /* увеличить высоту */
+    font-size: 1.35em; /* увеличить размер шрифта */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+/* Ссылки в header */
+nav a {
+    color: #fff;
+    margin-right: 18px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+nav a:hover {
+    color: #ffd700;
+}
+nav span {
+    margin-left: 30px;
+    font-weight: 400;
+    color: #ffd700;
+}
+
+/* Стили для основного контейнера */
+main {
+    max-width: 1600px;
+    margin: 0 auto; /* убрано 40px сверху и 30px снизу */
+    background: #fff;
+    padding: 32px 32px 24px 32px;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(44,62,80,0.07);
+}
+
+/* Стили для футера */
+footer {
+    text-align: center;
+    margin: 0; /* убраны внешние отступы */
+    color: #888;
+    font-size: 15px;
+}
+
+/* Стили для сообщений (флешей) */
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 18px;
+}
+.flashes li {
+    margin: 7px 0;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 16px;
+}
+.flashes .success {
+    background: #e6f9e6;
+    color: #217a2b;
+    border: 1px solid #b6eab6;
+}
+.flashes .error {
+    background: #ffeaea;
+    color: #a94442;
+    border: 1px solid #f5c6cb;
+}
+
+/* Кнопки: основной стиль */
+.btn, .btn-small, button, input[type="submit"] {
+    background: #502d2d;
+    color: #fff;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    margin: 3px 0;
+    transition: background 0.2s, color 0.2s;
+    font-family: inherit;
+}
+
+/* Все кнопки цвета "назад" (серые) теперь нежно-розовые */
+.btn[style*="background:#888"],
+.btn[style*="background: #888"],
+.btn[style*="background:rgb(136,136,136)"],
+.btn[style*="background: #888;"],
+.btn[style*="background:#888;"],
+a.btn[style*="background:#888"],
+a.btn[style*="background: #888"],
+a.btn[style*="background:rgb(136,136,136)"],
+a.btn[style*="background: #888;"],
+a.btn[style*="background:#888;"],
+.btn-back,
+a.btn-back,
+.add-book-btn {
+    background: #f8bbd0 !important; /* нежно-розовый */
+    color: #ad1457 !important;
+    border: none;
+}
+
+/* Ховер для розовых кнопок */
+.btn[style*="background:#888"]:hover,
+.btn[style*="background: #888"]:hover,
+.btn[style*="background:rgb(136,136,136)"]:hover,
+.btn[style*="background: #888;"]:hover,
+.btn[style*="background:#888;"]:hover,
+a.btn[style*="background:#888"]:hover,
+a.btn[style*="background: #888"]:hover,
+a.btn[style*="background:rgb(136,136,136)"]:hover,
+a.btn[style*="background: #888;"]:hover,
+a.btn[style*="background:#888;"]:hover,
+.btn-back:hover,
+a.btn-back:hover,
+.add-book-btn:hover {
+    background: #f06292 !important; /* чуть ярче при наведении */
+    color: #fff !important;
+}
+
+/* Стили для таблиц */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 18px;
+    background: #fafbfc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(44,62,80,0.04);
+}
+th, td {
+    padding: 14px 18px;
+    text-align: left;
+}
+th {
+    background: #e9ecef;
+    font-weight: 600;
+    color: #502d2d;
+    border-bottom: 2px solid #d1d7de;
+}
+tr:nth-child(even) {
+    background: #f6f8fa;
+}
+tr:hover {
+    background: #f0f4fa;
+}
+td img {
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(44,62,80,0.08);
+}
+
+/* Стили для форм */
+form input[type="text"], form input[type="password"], form textarea, form select {
+    width: 100%;
+    padding: 8px 10px;
+    margin: 6px 0 14px 0;
+    border: 1px solid #cfd8dc;
+    border-radius: 5px;
+    font-size: 15px;
+    background: #f8fafc;
+    transition: border 0.2s;
+    box-sizing: border-box;
+}
+form input[type="text"]:focus, form input[type="password"]:focus, form textarea:focus, form select:focus {
+    border: 1.5px solid #502d2d;
+    outline: none;
+    background: #fff;
+}
+form label {
+    font-weight: 500;
+    color: #502d2d;
+}
+form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Модальное окно для подтверждения удаления */
+#deleteModal {
+    display: none;
+    position: fixed;
+    left: 0; top: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(80, 44, 44, 0.18);
+    z-index: 1000;
+}
+#deleteModal > div {
+    background: #fff;
+    max-width: 400px;
+    margin: 120px auto;
+    padding: 28px 24px 18px 24px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 2px 16px rgba(80, 44, 44, 0.13);
+}
+#deleteModal h3 {
+    margin-top: 0;
+    color: #ad2f2d;
+}
+#deleteModal button {
+    margin-left: 10px;
+    min-width: 70px;
+}
+
+/* Стили для картинок обложек */
+img[src*="covers/"] {
+    border: 1px solid #e9ecef;
+    background: #f8fafc;
+    padding: 2px;
+    max-height: 200px;
+    max-width: 100%;
+}
+
+/* Адаптивная таблица */
+.table-responsive {
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 700px) {
+    main { padding: 10px; }
+    table, th, td { font-size: 13px; }
+    nav { padding-left: 10px; }
+}
+
+/* Стили для формы поиска */
+.search-form {
+    display: flex;
+    gap: 0;
+    max-width: 400px;
+    margin-bottom: 15px;
+}
+.search-form input[type="text"] {
+    flex: 1 1 auto;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin: 0;
+}
+.search-form button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin: 0;
+    height: 40px;
+    padding: 0 22px;
+}

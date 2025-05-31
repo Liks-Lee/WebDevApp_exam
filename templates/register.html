@@ -1,0 +1,57 @@
+<!-- register.html - шаблон для страницы регистрации нового пользователя -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Регистрация</h2>
+<form method="post" class="register-form">
+    {{ form.hidden_tag() }}
+    <div>{{ form.username.label }}<br>{{ form.username(size=32) }}</div>
+    <div>{{ form.password.label }}<br>{{ form.password(size=32, autocomplete="new-password") }}</div>
+    <div>{{ form.last_name.label }}<br>{{ form.last_name(size=32) }}</div>
+    <div>{{ form.first_name.label }}<br>{{ form.first_name(size=32) }}</div>
+    <div>{{ form.middle_name.label }}<br>{{ form.middle_name(size=32) }}</div>
+    <div class="form-actions">
+        <a href="{{ url_for('login') }}" class="btn form-back-btn same-width-btn">Назад</a>
+        {{ form.submit(class_="btn same-width-btn") }}
+    </div>
+</form>
+<style>
+.register-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 28px;
+    gap: 16px;
+}
+.register-form .btn, .register-form .form-back-btn, .same-width-btn {
+    min-width: 160px;
+    font-size: 17px;
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none !important;
+    display: inline-block;
+    box-sizing: border-box;
+}
+.form-back-btn {
+    background: #888;
+    color: #fff;
+    border: none;
+    transition: background 0.2s, color 0.2s;
+}
+.form-back-btn:hover {
+    background: #ffd700;
+    color: #222;
+}
+@media (max-width: 900px) {
+    .register-form .form-actions {
+        flex-direction: column-reverse;
+        gap: 10px;
+        align-items: stretch;
+    }
+    .register-form .btn, .register-form .form-back-btn, .same-width-btn {
+        width: 100%;
+        min-width: 0;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}

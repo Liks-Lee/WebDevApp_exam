@@ -1,0 +1,109 @@
+<!-- base.html - базовый шаблон проекта для других страниц -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- Мета и подключение стилей -->
+    <meta charset="UTF-8">
+    <title>Электронная библиотека</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+    html, body {
+        height: 100%;
+    }
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    main {
+        flex: 1 0 auto;
+    }
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-right: 32px;
+        padding-left: 32px;
+    }
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+    .nav-user {
+        color: #fff;
+        font-weight: 500;
+        margin-left: 0;
+    }
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+    .nav-right a {
+        margin-left: 0;
+    }
+    footer {
+        text-align: center;
+        padding: 10px 0;
+        background-color: #f4f6fb;
+        border-top: 1px solid #e9ecef;
+        box-sizing: border-box;
+    }
+    </style>
+</head>
+<body>
+    <!-- Верхнее меню (header) -->
+    <nav>
+        <div class="nav-left">
+            {% if current_user.is_authenticated %}
+                <!-- Имя пользователя, если вошёл -->
+                <span class="nav-user">
+                    {{ current_user.first_name }} {{ current_user.last_name }}
+                </span>
+            {% else %}
+                <!-- Гость -->
+                <span class="nav-user">Гость</span>
+            {% endif %}
+        </div>
+        <div class="nav-right">
+            <!-- Основные ссылки меню -->
+            <a href="/">Главная</a>
+            {% if current_user.is_authenticated %}
+                {% if current_user.role.name == 'admin' %}
+                    <a href="/users">Пользователи</a>
+                    <a href="/all-reviews">Все рецензии</a>
+                {% endif %}
+                {% if current_user.role.name == 'user' %}
+                    <a href="/my-reviews">Мои рецензии</a>
+                {% elif current_user.role.name == 'moderator' %}
+                    <a href="/moderate">Модерация рецензий</a>
+                {% endif %}
+                <a href="/logout">Выйти</a>
+            {% else %}
+                <a href="/login">Войти</a>
+            {% endif %}
+        </div>
+    </nav>
+    <main>
+        <!-- Вывод flash-сообщений -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <!-- Контент страницы -->
+        {% block content %}{% endblock %}
+    </main>
+    <!-- Футер -->
+    <footer>
+        <hr>
+        <!-- Информация о проекте и авторе -->
+        <small style="font-size: 18px;">Электронная библиотека <b>Егорова Ксения, группа 231-3211</b></small>
+    </footer>
+</body>
+</html>

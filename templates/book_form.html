@@ -1,0 +1,97 @@
+<!-- book_form.html - шаблон для добавления или редактирования книги -->
+{% extends 'base.html' %}
+{% block content %}
+<h2 style="margin-bottom:24px;">{% if book %}Редактирование книги{% else %}Добавление книги{% endif %}</h2>
+<form method="post" {% if not book %}enctype="multipart/form-data"{% endif %} class="book-form">
+    {{ form.hidden_tag() }}
+    <div class="form-row">
+        <div class="form-col">
+            <div>{{ form.title.label }}<br>{{ form.title(size=60) }}</div>
+            <div>{{ form.author.label }}<br>{{ form.author(size=40) }}</div>
+            <div>{{ form.publisher.label }}<br>{{ form.publisher(size=40) }}</div>
+            <div>{{ form.year.label }}<br>{{ form.year() }}</div>
+            <div>{{ form.pages.label }}<br>{{ form.pages() }}</div>
+        </div>
+        <div class="form-col">
+            <div>{{ form.description.label }}<br>{{ form.description(rows=8, cols=50) }}</div>
+            <div>{{ form.genres.label }}<br>{{ form.genres(multiple=True) }}</div>
+            {% if not book %}
+                <div>{{ form.cover.label }}<br>{{ form.cover() }}</div>
+            {% endif %}
+            {% if book and book.cover %}
+                <div style="margin-top:8px;">
+                    <b>Текущая обложка:</b><br>
+                    <img src="/static/covers/{{ book.cover.filename }}" style="width:100px; border-radius:8px; margin-top:4px;">
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-actions">
+        <a href="/" class="btn form-back-btn same-width-btn">Назад</a>
+        {{ form.submit(class_="btn same-width-btn") }}
+    </div>
+</form>
+<style>
+.book-form .form-row {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+.book-form .form-col {
+    flex: 1 1 320px;
+    min-width: 280px;
+}
+.book-form label {
+    font-weight: 500;
+    color: #2d3e50;
+}
+.book-form input[type="text"], .book-form textarea, .book-form select, .book-form input[type="number"] {
+    margin-bottom: 14px;
+}
+.book-form input[type="file"] {
+    margin-top: 6px;
+}
+.book-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 28px;
+    gap: 16px;
+}
+.book-form .btn, .book-form .form-back-btn, .same-width-btn {
+    min-width: 160px;
+    font-size: 17px;
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none !important;
+    display: inline-block;
+    box-sizing: border-box;
+}
+.form-back-btn {
+    background: #888;
+    color: #fff;
+    border: none;
+    transition: background 0.2s, color 0.2s;
+}
+.form-back-btn:hover {
+    background: #ffd700;
+    color: #222;
+}
+@media (max-width: 900px) {
+    .book-form .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    .book-form .form-actions {
+        flex-direction: column-reverse;
+        gap: 10px;
+        align-items: stretch;
+    }
+    .book-form .btn, .book-form .form-back-btn, .same-width-btn {
+        width: 100%;
+        min-width: 0;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}

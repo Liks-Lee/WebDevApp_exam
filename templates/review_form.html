@@ -1,0 +1,11 @@
+<!-- review_form.html - шаблон для добавления рецензии к книге -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Добавить рецензию</h2>
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div>{{ form.rating.label }}<br>{{ form.rating() }}</div>
+    <div>{{ form.text.label }}<br>{{ form.text(rows=5, cols=60) }}</div>
+    <div>{{ form.submit() }}</div>
+</form>
+{% endblock %}

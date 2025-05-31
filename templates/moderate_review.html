@@ -1,0 +1,15 @@
+<!-- moderate_review.html - шаблон для модерации конкретной рецензии -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Рассмотрение рецензии</h2>
+<p><b>Книга:</b> <a href="/book/{{ review.book.id }}">{{ review.book.title }}</a></p>
+<p><b>Пользователь:</b> {{ review.user.last_name }} {{ review.user.first_name }}</p>
+<p><b>Оценка:</b> {{ review.rating }}</p>
+<p><b>Текст:</b></p>
+<div>{{ review.text_html|safe }}</div>
+<p><b>Дата:</b> {{ review.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+<form method="post">
+    <button name="action" value="approve">Одобрить</button>
+    <button name="action" value="reject">Отклонить</button>
+</form>
+{% endblock %}

@@ -1,0 +1,40 @@
+<!-- all_reviews.html - шаблон для отображения всех рецензий -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Все рецензии</h2>
+<table>
+    <tr>
+        <th>Статус</th>
+        <th>Книга</th>
+        <th>Пользователь</th>
+        <th>Оценка</th>
+        <th>Текст</th>
+        <th>Дата</th>
+    </tr>
+    {% for review in reviews %}
+    <tr>
+        <td>
+            {# Отображение статуса рецензии с цветом #}
+            {% if review.status.name == 'approved' %}
+                <span style="color: #217a2b; font-weight: 600;">Одобрено</span>
+            {% elif review.status.name == 'rejected' %}
+                <span style="color: #a94442; font-weight: 600;">Отклонено</span>
+            {% elif review.status.name == 'pending' %}
+                <span style="color: #888; font-weight: 600;">На рассмотрении</span>
+            {% else %}
+                {{ review.status.name }}
+            {% endif %}
+        </td>
+        <td><a href="/book/{{ review.book.id }}">{{ review.book.title }}</a></td>
+        <td>{{ review.user.last_name }} {{ review.user.first_name }}</td>
+        <td>{{ review.rating }}</td>
+        <td>{{ review.text_html|safe }}</td>
+        <td>{{ review.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<div style="margin-top: 24px;">
+    {# Кнопка "Назад" #}
+    <a href="/" class="btn" style="background:#888;">Назад</a>
+</div>
+{% endblock %}

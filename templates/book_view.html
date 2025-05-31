@@ -1,0 +1,35 @@
+<!-- book_view.html - шаблон для отображения информации о книге и её рецензиях -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ book.title }}</h2>
+<p><b>Автор:</b> {{ book.author }}</p>
+<p><b>Год:</b> {{ book.year }}</p>
+<p><b>Издательство:</b> {{ book.publisher }}</p>
+<p><b>Жанры:</b>
+    {% for genre in book.genres %}
+        {{ genre.name }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+</p>
+<p><b>Страниц:</b> {{ book.pages }}</p>
+{% if book.cover %}
+    <img src="/static/covers/{{ book.cover.filename }}" width="200">
+{% endif %}
+<h3>Описание</h3>
+<div>{{ book.description_html|safe }}</div>
+<h3>Рецензии</h3>
+{% for review in reviews %}
+    <div style="border:1px solid #ccc; margin:10px 0; padding:10px;">
+        <b>{{ review.user.last_name }} {{ review.user.first_name }}</b> — Оценка: {{ review.rating }}<br>
+        <div>{{ review.text_html|safe }}</div>
+        <small>Добавлено: {{ review.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+    </div>
+{% else %}
+    <p>Пока нет рецензий.</p>
+{% endfor %}
+<div style="display: flex; gap: 16px; margin-top: 24px;">
+    <a href="/" class="btn" style="background:#888;">Назад</a>
+    {% if can_review %}
+        <a href="/book/{{ book.id }}/review" class="btn">Написать рецензию</a>
+    {% endif %}
+</div>
+{% endblock %}

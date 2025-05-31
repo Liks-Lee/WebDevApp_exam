@@ -1,0 +1,265 @@
+<!-- index.html - шаблон главной страницы со списком книг -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Список книг</h2>
+<div class="search-add-row">
+    {# Форма поиска по названию #}
+    <form method="get" class="search-form">
+        <input type="text" name="search" value="{{ search or '' }}" placeholder="Поиск по названию">
+        <button type="submit">Найти</button>
+    </form>
+    {% if current_user.is_authenticated and current_user.role.name == 'admin' %}
+        {# Кнопка добавления книги #}
+        <a href="/book/add" class="btn btn-small add-book-btn" style="text-decoration:none;">Добавить книгу</a>
+    {% endif %}
+</div>
+<table>
+    <tr>
+        <th>Обложка</th>
+        <th>Название</th>
+        <th>Жанры</th>
+        <th>Год</th>
+        <th>Средняя оценка</th>
+        <th>Рецензий</th>
+        <th>Действия</th>
+    </tr>
+    {% for book in books.items %}
+    <tr>
+        <td>
+            {% if book.cover %}
+                <img src="/static/covers/{{ book.cover.filename }}" class="cover-thumb" alt="Обложка">
+            {% endif %}
+        </td>
+        <td>{{ book.title }}</td>
+        <td>
+            {# Вывод жанров книги #}
+            {% for genre in book.genres %}
+                {{ genre.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </td>
+        <td>{{ book.year }}</td>
+        <td>{{ book.avg_rating or '-' }}</td>
+        <td>{{ book.reviews_count }}</td>
+        <td>
+            <div class="actions-row">
+                {# Кнопка просмотра #}
+                <a href="/book/{{ book.id }}" class="action-btn view-btn" title="Просмотр">&#128065; Просмотр</a>
+                {% if current_user.is_authenticated and current_user.role.name in ['admin', 'moderator'] %}
+                    {# Кнопка редактирования #}
+                    <a href="/book/{{ book.id }}/edit" class="action-btn edit-btn" title="Редактировать">&#9998; Редактировать</a>
+                {% endif %}
+                {% if current_user.is_authenticated and current_user.role.name == 'admin' %}
+                    {# Кнопка удаления (открывает модальное окно) #}
+                    <a href="#" class="action-btn delete-btn" title="Удалить"
+                    onclick="showDeleteModal({{ book.id }}, '{{ book.title|escape }}'); return false;">&#128465; Удалить</a>
+                {% endif %}
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="pagination-row">
+    {# Пагинация: назад #}
+    <form method="get" style="display:inline;">
+        {% if search %}
+            <input type="hidden" name="search" value="{{ search }}">
+        {% endif %}
+        <button type="submit" name="page" value="1" class="btn-small" {% if books.page == 1 %}disabled{% endif %}>&laquo; Первая</button>
+        <button type="submit" name="page" value="{{ books.prev_num }}" class="btn-small" {% if not books.has_prev %}disabled{% endif %}>&lt; Назад</button>
+    </form>
+    <span class="pagination-info">
+        Страница {{ books.page }} из {{ books.pages }}
+    </span>
+    {# Пагинация: вперёд #}
+    <form method="get" style="display:inline;">
+        {% if search %}
+            <input type="hidden" name="search" value="{{ search }}">
+        {% endif %}
+        <button type="submit" name="page" value="{{ books.next_num }}" class="btn-small" {% if not books.has_next %}disabled{% endif %}>Вперёд &gt;</button>
+        <button type="submit" name="page" value="{{ books.pages }}" class="btn-small" {% if books.page == books.pages %}disabled{% endif %}>Последняя &raquo;</button>
+    </form>
+</div>
+
+<!-- Модальное окно для удаления книги -->
+<div id="deleteModal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:1000;">
+<div style="background:#fff; max-width:400px; margin:100px auto; padding:20px; border-radius:8px; position:relative;">
+    <h3>Удаление книги</h3>
+    <p id="deleteModalText"></p>
+    <div style="text-align:right;">
+    <button onclick="closeDeleteModal()">Нет</button>
+    <button id="deleteModalYesBtn">Да</button>
+    </div>
+</div>
+</div>
+<script>
+let deleteBookId = null;
+// Открыть модальное окно удаления книги
+function showDeleteModal(bookId, bookTitle) {
+    deleteBookId = bookId;
+    document.getElementById('deleteModalText').innerText = 'Вы уверены, что хотите удалить книгу "' + bookTitle + '"?';
+    document.getElementById('deleteModal').style.display = 'block';
+}
+// Закрыть модальное окно
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    deleteBookId = null;
+}
+// Подтвердить удаление
+document.getElementById('deleteModalYesBtn').onclick = function() {
+    if (deleteBookId) {
+        window.location.href = '/book/' + deleteBookId + '/delete';
+    }
+};
+</script>
+<style>
+.search-add-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 15px;
+}
+.add-book-btn {
+    white-space: nowrap;
+    margin-left: 18px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    padding: 4px 16px;
+    text-decoration: none !important;
+}
+.btn-small {
+    font-size: 14px;
+    padding: 4px 16px;
+    height: 32px;
+}
+.actions-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+.action-btn {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none !important;
+    transition: background 0.2s, color 0.2s;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+}
+.view-btn {
+    background: #e9ecef;
+    color: #2d3e50;
+}
+.view-btn:hover {
+    background: #d1e7fd;
+    color: #1d3557;
+}
+.edit-btn {
+    background: #fff3cd;
+    color: #856404;
+}
+.edit-btn:hover {
+    background: #ffe082;
+    color: #6d4c00;
+}
+.delete-btn {
+    background: #f8d7da;
+    color: #a94442;
+}
+.delete-btn:hover {
+    background: #f5c6cb;
+    color: #721c24;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+tr:hover {
+    background-color: #f5f5f5;
+}
+.cover-thumb {
+    width: 80px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.13);
+    background: #f8fafc;
+    border: 1px solid #e9ecef;
+    display: block;
+    margin: 0 auto;
+    object-fit: cover;
+}
+.pagination-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin: 18px 0 0 0;
+}
+.pagination-row form {
+    display: flex;
+    gap: 8px;
+}
+.pagination-info {
+    font-size: 16px;
+    color: #444;
+    min-width: 120px;
+    text-align: center;
+}
+.btn-small[disabled], .btn-small:disabled {
+    background: #e9ecef !important;
+    color: #aaa !important;
+    cursor: not-allowed;
+    border: none;
+    opacity: 0.7;
+}
+@media (max-width: 700px) {
+    .search-add-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .add-book-btn {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+    }
+    .action-btn {
+        width: 100%;
+        margin: 4px 0;
+        text-align: center;
+    }
+    .cover-thumb {
+        width: 60px;
+    }
+    .actions-row {
+        flex-direction: column;
+        gap: 4px;
+        align-items: stretch;
+    }
+    .pagination-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .pagination-info {
+        margin: 6px 0;
+    }
+}
+</style>
+{% endblock %}

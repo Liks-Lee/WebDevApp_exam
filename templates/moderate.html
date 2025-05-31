@@ -1,0 +1,26 @@
+<!-- moderate.html - шаблон для модерации списка рецензий -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Модерация рецензий</h2>
+<table>
+    <tr>
+        <th>Книга</th>
+        <th>Пользователь</th>
+        <th>Дата</th>
+        <th>Действие</th>
+    </tr>
+    {% for review in reviews.items %}
+    <tr>
+        <td><a href="/book/{{ review.book.id }}">{{ review.book.title }}</a></td>
+        <td>{{ review.user.last_name }} {{ review.user.first_name }}</td>
+        <td>{{ review.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+        <td><a href="/moderate/{{ review.id }}">Рассмотреть</a></td>
+    </tr>
+    {% endfor %}
+</table>
+<div>
+    {% if reviews.has_prev %}<a href="/moderate?page={{ reviews.prev_num }}">&lt; Назад</a>{% endif %}
+    Страница {{ reviews.page }} из {{ reviews.pages }}
+    {% if reviews.has_next %}<a href="/moderate?page={{ reviews.next_num }}">Вперёд &gt;</a>{% endif %}
+</div>
+{% endblock %}

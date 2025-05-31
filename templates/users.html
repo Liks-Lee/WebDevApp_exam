@@ -1,0 +1,78 @@
+<!-- users.html - шаблон для отображения списка пользователей -->
+{% extends 'base.html' %}
+{% block content %}
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
+    <h2 style="margin: 0;">Пользователи</h2>
+    {# Кнопка добавления пользователя #}
+    <a href="{{ url_for('add_user') }}" class="btn btn-small user-add-btn">Добавить пользователя</a>
+</div>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Логин</th>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Отчество</th>
+        <th>Роль</th>
+        <th>Действия</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.middle_name or '' }}</td>
+        <td>{{ user.role.name }}</td>
+        <td>
+            <div class="user-actions-row">
+                {# Кнопка редактирования пользователя #}
+                <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-small user-action-btn">Редактировать</a>
+                {% if user.id != current_user.id %}
+                {# Кнопка удаления пользователя #}
+                <form method="post" action="{{ url_for('delete_user', user_id=user.id) }}" style="display:inline;" onsubmit="return confirm('Удалить пользователя?');">
+                    <button type="submit" class="btn btn-small user-action-btn user-delete-btn">Удалить</button>
+                </form>
+                {% endif %}
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<style>
+.user-actions-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.user-action-btn {
+    min-width: 120px;
+    height: 36px;
+    font-size: 15px;
+    padding: 6px 0;
+    text-align: center;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.user-delete-btn {
+    background: #a94442;
+}
+.user-delete-btn:hover {
+    background: #f5c6cb;
+    color: #721c24;
+}
+.user-add-btn {
+    min-width: 180px;
+    height: 36px;
+    font-size: 15px;
+    padding: 6px 0;
+    text-align: center;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+{% endblock %}
