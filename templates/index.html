@@ -1,15 +1,12 @@
-<!-- index.html - шаблон главной страницы со списком книг -->
 {% extends 'base.html' %}
 {% block content %}
 <h2>Список книг</h2>
 <div class="search-add-row">
-    {# Форма поиска по названию #}
     <form method="get" class="search-form">
         <input type="text" name="search" value="{{ search or '' }}" placeholder="Поиск по названию">
         <button type="submit">Найти</button>
     </form>
     {% if current_user.is_authenticated and current_user.role.name == 'admin' %}
-        {# Кнопка добавления книги #}
         <a href="/book/add" class="btn btn-small add-book-btn" style="text-decoration:none;">Добавить книгу</a>
     {% endif %}
 </div>
@@ -32,24 +29,27 @@
         </td>
         <td>{{ book.title }}</td>
         <td>
-            {# Вывод жанров книги #}
+            {# Исправленный вывод жанров #}
             {% for genre in book.genres %}
                 {{ genre.name }}{% if not loop.last %}, {% endif %}
             {% endfor %}
         </td>
         <td>{{ book.year }}</td>
-        <td>{{ book.avg_rating or '-' }}</td>
+        <td>
+            {% if book.avg_rating is not none %}
+                {{ '%.1f'|format(book.avg_rating) }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
         <td>{{ book.reviews_count }}</td>
         <td>
             <div class="actions-row">
-                {# Кнопка просмотра #}
                 <a href="/book/{{ book.id }}" class="action-btn view-btn" title="Просмотр">&#128065; Просмотр</a>
                 {% if current_user.is_authenticated and current_user.role.name in ['admin', 'moderator'] %}
-                    {# Кнопка редактирования #}
                     <a href="/book/{{ book.id }}/edit" class="action-btn edit-btn" title="Редактировать">&#9998; Редактировать</a>
                 {% endif %}
                 {% if current_user.is_authenticated and current_user.role.name == 'admin' %}
-                    {# Кнопка удаления (открывает модальное окно) #}
                     <a href="#" class="action-btn delete-btn" title="Удалить"
                     onclick="showDeleteModal({{ book.id }}, '{{ book.title|escape }}'); return false;">&#128465; Удалить</a>
                 {% endif %}
@@ -59,7 +59,6 @@
     {% endfor %}
 </table>
 <div class="pagination-row">
-    {# Пагинация: назад #}
     <form method="get" style="display:inline;">
         {% if search %}
             <input type="hidden" name="search" value="{{ search }}">
@@ -70,7 +69,6 @@
     <span class="pagination-info">
         Страница {{ books.page }} из {{ books.pages }}
     </span>
-    {# Пагинация: вперёд #}
     <form method="get" style="display:inline;">
         {% if search %}
             <input type="hidden" name="search" value="{{ search }}">
